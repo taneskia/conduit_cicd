@@ -2,9 +2,10 @@ name: Install helm chart
 
 on:
   repository_dispatch:
+    types: [backend_updated, frontend_updated]
 
 jobs:
-  helm-lint:
+  helm:
     name: Helm lint and release
     runs-on: ubuntu-latest
     needs: push_to_registry

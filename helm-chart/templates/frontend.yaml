@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: conduit_frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "helm-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "helm-chart.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Values.frontend.name }}
+        image: {{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}
+        # env:
+        #   - name: BACKEND_URL
+        #     value: "backend"
+        imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.frontend.image.port }}
+          protocol: TCP

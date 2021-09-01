@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: conduit_db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "helm-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "helm-chart.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Values.db.name }}
+        image: {{ .Values.db.image.repository }}
+        env:
+          - name: POSTGRES_USER
+            value: user
+          - name: POSTGRES_PASSWORD
+            value: password
+          - name: POSTGRES_DB
+            value: test-db
+        imagePullPolicy: {{ .Values.db.image.pullPolicy }}
+        ports:
+        - name: db-port
+          containerPort: {{ .Values.db.image.port }}
+          protocol: TCP

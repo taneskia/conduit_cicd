@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.db.name }}
+  labels:
+    {{- include "helm-chart.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.db.service.type }}
+  ports:
+    - port: {{ .Values.db.service.port }}
+      targetPort: db-port
+      protocol: TCP
+      name: db-port
+  selector:
+    {{- include "helm-chart.selectorLabels" . | nindent 4 }}

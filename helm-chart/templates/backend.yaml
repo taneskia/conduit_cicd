@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: conduit_backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "helm-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "helm-chart.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Values.backend.name }}
+        image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
+        env:
+          - name: USER_NAME
+            value: user
+          - name: PASSWORD
+            value: password
+          - name: DB_HOST
+            value: postgres
+          - name: DB
+            value: test-db
+          - name: PORT
+            value: "8080"
+        imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+        ports:
+        - name: http-backend
+          containerPort: {{ .Values.backend.image.port  }}
+          protocol: TCP
